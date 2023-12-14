@@ -24,7 +24,7 @@ import java.util.List;
 public class ShopTypeController {
     @Resource
     private IShopTypeService typeService;
-
+    // todo
     @GetMapping("list")
     public Result queryTypeList() {
         List<ShopType> typeList = typeService
