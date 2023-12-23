@@ -153,4 +153,15 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         return Result.ok(userDTOS);
     }
 
+    @Override
+    public Result saveblog(Blog blog) {
+        // 获取登陆用户
+        UserDTO user = UserHolder.getUser();
+        blog.setUserId(user.getId());
+
+        // 保存探店博文
+        save(blog);
+        return Result.ok(blog.getId());
+    }
+
 }
