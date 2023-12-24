@@ -102,4 +102,8 @@ public class UserController {
         // 返回
         return Result.ok(userDTO);
     }
+    @GetMapping("/sign")
+    public Result sign(){
+        return userService.sign();
+    }
 }
