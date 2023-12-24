@@ -38,10 +38,11 @@ class HmDianPingApplicationTests {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
     @Test
     void testIdWorker() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(300);
-        Runnable task = () ->{
+        Runnable task = () -> {
             for (int i = 0; i < 100; i++) {
                 long id = redisIdWorker.nextId("order");
                 System.out.println("id = " + id);
@@ -55,19 +56,18 @@ class HmDianPingApplicationTests {
         latch.await();
         long end = System.currentTimeMillis();
 
-        System.out.println("time = "+ (end -begin));
+        System.out.println("time = " + (end - begin));
         System.out.println("finish");
-
 
 
     }
 
-   @Test
+    @Test
     void testSaveShop() throws InterruptedException {
 
         Shop shop = shopService.getById(1L);
 
-        cacheClient.setWithLogicalExpire(CACHE_SHOP_KEY+ 1L, shop, 10L, TimeUnit.SECONDS);
+        cacheClient.setWithLogicalExpire(CACHE_SHOP_KEY + 1L, shop, 10L, TimeUnit.SECONDS);
     }
 
     @Test
@@ -94,6 +94,24 @@ class HmDianPingApplicationTests {
             }
             stringRedisTemplate.opsForGeo().add(key, locations);
         }
+    }
+
+    @Test
+    void testHyperLogLog() {
+
+        String[] values = new String[1000];
+        int j = 0;
+
+        for (int i = 0; i < 1000000; i++) {
+            j = i % 1000;
+            values[j] = "user_" + i;
+            if (j == 999) {
+                stringRedisTemplate.opsForHyperLogLog().add("hl2", values);
+            }
+        }
+        Long hl2 = stringRedisTemplate.opsForHyperLogLog().size("hl2");
+        System.out.println("count = "+ hl2);
+
     }
 
 
